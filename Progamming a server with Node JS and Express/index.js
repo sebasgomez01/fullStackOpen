@@ -51,6 +51,47 @@ app.get('/info', (request, response) => {
 		<p>${date.toString()}</p>`)
 })
 
+app.get('/api/persons/:id', (request, response) => {
+	const id = Number(request.params.id);
+	const person = persons.find(person => person.id === id)
+  	if(person) {
+  		response.json(person);
+  	} else {
+  		response.status(404).end()
+  	}
+})
+
+app.delete('/api/persons/:id', (request, response) => {
+	const id = Number(request.params.id);
+	console.log(persons)
+	const person = persons.filter(person => person.id != id)
+	console.log(persons)
+	console.log(person)
+  	response.status(204).end()
+})
+
+app.post('/api/persons', (request, response) => {
+
+	const body = request.body
+	const id = getRandomInt(1000);
+	const personsWithSameName = persons.filter(person => person.name == body.name)
+
+	if(!body.name || !body.number) {
+		response.status(404).json({error: 'content missing'})
+	} else if(person.length != 0) {
+		response.status(404).json({error: 'name must be unique'})
+	} 
+	
+	const personToAdd = { 
+		"id": id,
+		"name": body.name,
+		"number": body.name
+	}
+
+	persons = persons.concat(personToAdd)
+	response.json(persons)
+})
+
 const PORT = 3001
 app.listen(PORT, () => {
 	console.log(`Hola Sebastián, tu server está andando en el puerto ${PORT}`)
